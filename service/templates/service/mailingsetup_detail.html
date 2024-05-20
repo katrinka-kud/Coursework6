@@ -1,0 +1,62 @@
+{% extends 'service/base.html' %}
+
+{% block content %}
+<form class="row" method="post" enctype="multipart/form-data">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">
+                    Полная информация о рассылке
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Номер</th>
+                            <td>{{ object.pk }}</td>
+                        </tr>
+                        <tr>
+                            <th>Дата начала рассылки</th>
+                            <td>{{ object.data_begin }}</td>
+                        </tr>
+                        <tr>
+                            <th>Дата конца рассылки</th>
+                            <td>{{ object.data_end }}</td>
+                        </tr>
+                        <tr>
+                            <th>Период</th>
+                            <td>{{ object.period }}</td>
+                        </tr>
+                        <tr>
+                            <th>Статус</th>
+                            <td>{{ object.status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Владелец</th>
+                            <td>{{ object.owner }}</td>
+                        </tr>
+                        <tr>
+                            <th>Список клиентов</th>
+                            <td>{% for client_item in object.clients.all %}</td>
+                            {{ client_item.email }}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Статус</th>
+                            <td>{{ object.is_active }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer"></div>
+            {% if perms.service.can_disable_mailing and perms.users.can_block_user or user == object.owner %}
+            <a type="button" class="btn btn-sl btn-outline-secondary"
+               href="{% url 'service:mailingsetup_update' object.pk %}">Редактировать</a>
+            <a type="button" class="btn btn-sl btn-outline-secondary"
+               href="{% url 'service:mailingsetup_delete' object.pk %}">Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+{% endblock %}

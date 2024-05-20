@@ -1,0 +1,48 @@
+{% extends 'service/base.html' %}
+{% block content %}
+<div class="container col-8 mt-2 mb-5">
+    <div class="card">
+        <div class="card-header text-center">
+            <h1>Статистика</h1>
+        </div>
+        <div class="card-body">
+            <div class="row text-center ">
+                <div class="col-12">
+                    <table class="table">
+                        <tr>
+                            <th><h4>Количество рассылок</h4></th>
+                            <th><h4>Количество активных рассылок</h4></th>
+                            <th><h4>Количество уникальных клиентов</h4></th>
+                        </tr>
+                        <body>
+                        <tr>
+                            <td><h4>{{ all }}</h4></td>
+                            <td><h4>{{ active }}</h4></td>
+                            <td><h4>{{ clients_count }}</h4></td>
+                        </tr>
+                        </body>
+                    </table>
+                    <hr>
+                    <table class="table">
+                        <tr>
+                            <h3>Случайные статьи</h3>
+                            <th><h5>Статьи</h5></th>
+                            <th><h5>Подробнее</h5></th>
+                        </tr>
+                        <tbody>
+                        {% for article, pk in articles.items %}
+                        <tr>
+                            <td><h5>{{ article }}</h5></td>
+                            <td><a class="p-2 btn btn-primary"
+                                   href="{% url 'blog:detail' pk %}">Перейти к статье</a>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

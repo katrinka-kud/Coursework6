@@ -1,0 +1,36 @@
+{% extends 'service/base.html' %}
+
+{% block content %}
+<div class="col-6">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">
+                Информация
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>Заголовок</th>
+                        <td>{{ object.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>Содержимое</th>
+                        <td>{{ object.body }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дата создания</th>
+                        <td>{{ object.created_at }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+        {% if perms.service.can_disable_mailing and perms.users.can_block_user or user == object.owner %}
+        <a type="button" class="btn btn-sl btn-outline-secondary" href="{% url 'blog:blog_update' object.pk %}">Редактировать</a>
+        <a type="button" class="btn btn-sl btn-outline-secondary" href="{% url 'blog:blog_delete' object.pk %}">Удалить</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
