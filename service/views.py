@@ -13,6 +13,20 @@ from service.models import Client, MailingSetup, Messages, Logs
 class HomeView(TemplateView):
     template_name = 'service/home.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+
+        context_data['all'] = MailingSetup.objects.count()
+        context_data['active'] = MailingSetup.objects.filter(status=MailingSetup.STATUS_START).count()
+        context_data['clients_count'] = Client.objects.count()
+
+        random_blogs = Blog.objects.order_by('?')[:3]
+        blog_article_title = [blog.title for blog in random_blogs]
+        blog_article_pk = [blog.pk for blog in random_blogs]
+        context_data['articles'] = dict(zip(blog_article_title, blog_article_pk))
+
+        return context_data
+
 
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
@@ -92,26 +106,6 @@ class MailingSetupListView(LoginRequiredMixin, ListView):
         else:
             return super().get_queryset().filter(owner=self.request.user).order_by('data_begin')
 
-    def get_context_data(self, *args, **kwargs):
-        context_data = super().get_context_data(*args, **kwargs)
-        user = self.request.user
-        if user.is_superuser:
-            context_data['all'] = MailingSetup.objects.count()
-            context_data['active'] = MailingSetup.objects.filter(status=MailingSetup.STATUS_START).count()
-            mailing_list = context_data['object_list']
-            clients = [[client.email for client in mailing.clients.all()] for mailing in mailing_list]
-            context_data['clients_count'] = len(clients)
-        else:
-            mailing_list = MailingSetup.objects.filter(owner=user)
-            clients = [[client.email for client in mailing.clients.all()] for mailing in mailing_list]
-            context_data['all'] = mailing_list.count()
-            context_data['active'] = mailing_list.filter(status=MailingSetup.STATUS_START).count()
-            context_data['clients_count'] = len(clients)
-        random_blogs = Blog.objects.order_by('?')[:3]
-        blog_article_title = [blog.title for blog in random_blogs]
-        blog_article_pk = [blog.pk for blog in random_blogs]
-        context_data['articles'] = dict(zip(blog_article_title, blog_article_pk))
-        return context_data
 
 class MailingSetupDetailView(LoginRequiredMixin, DetailView):
     model = MailingSetup

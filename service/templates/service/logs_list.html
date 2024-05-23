@@ -35,20 +35,20 @@
             <div class="col-12">
                 <table class="table text-center">
                     <tr>
-                        <th><h4>Время рассылки</h4></th>
+                        <th><h4>Дата рассылки</h4></th>
                         <th><h4>Данные рассылки</h4></th>
                         <th><h4>Получатель рассылки</h4></th>
                         <th><h4>Статус рассылки</h4></th>
                     </tr>
                     {% for object in object_list %}
-                    {% if object.mailing_list.owner == request.user or request.user.is_superuser %}
+                    {% if object.send_list.owner == request.user or request.user.is_superuser %}
                     <tr>
-                        <td><h4>{{ object.time }}</h4></td>
-                        <td><h4>{{ object.mailing_list }}</h4></td>
+                        <td><h4>{{ object.data_send }}</h4></td>
+                        <td><h4>{{ object.send_list }}</h4></td>
                         <td><h4>{{ object.client }}</h4></td>
                         <td>
                             <h4>
-                                {% if object.status %}
+                                {% if object.is_done %}
                                 <p style="color:green">Успешно</p>
                                 {% else %}
                                 <p style="color:red">Ошибка</p>
